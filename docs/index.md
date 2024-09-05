@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "TODO: Title"
-  text: "TODO: Subtitle"
-  tagline: "TODO: Tagline"
+  name: "Miguel Padilla"
+  text: "a 6.1040 portfolio"
+  tagline: "more to come soon..."
   actions:
     - theme: brand
       text: Template Repository

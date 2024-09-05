@@ -3,9 +3,8 @@ import { defineConfig } from "vitepress";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "TODO: add your title here",
-  description: "6.1040 Fall 2024",
-  // TODO: add your base here; this should be your repo name!
-  // base: "/<REPO_NAME>/",
+  description: "6.1040 Fall 2024",  
+  base: "/Portfolio-Miguel-Padilla/",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
