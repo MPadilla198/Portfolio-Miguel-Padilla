@@ -22,4 +22,5 @@ features:
     details: All of your assignments will be posted on your portfolio.
   - title: About Me
     details: You'll implement a small bio about yourself on here!
+    link: about.md
 ---
