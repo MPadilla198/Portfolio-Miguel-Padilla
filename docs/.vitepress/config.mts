@@ -2,7 +2,7 @@ import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Miguel Padilla; Portfolio",
+  title: "Miguel Padilla's Portfolio",
   description: "6.1040 Fall 2024",  
   base: "/portfolio-miguel-padilla/",
   themeConfig: {
