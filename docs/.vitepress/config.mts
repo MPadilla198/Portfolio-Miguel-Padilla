@@ -2,9 +2,9 @@ import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "TODO: add your title here",
+  title: "Miguel Padilla; Portfolio",
   description: "6.1040 Fall 2024",  
-  base: "/Portfolio-Miguel-Padilla/",
+  base: "/portfolio-miguel-padilla/",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
