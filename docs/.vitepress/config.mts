@@ -9,7 +9,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
-      { text: "Blogs", link: "/blogs" },
+      // { text: "Blogs", link: "/blogs" },
+      { text: "About Me", link: "about.md"},
     ],
 
     sidebar: [
@@ -17,8 +18,12 @@ export default defineConfig({
         text: "Blogs",
         link: "/blogs",
       },
+      {
+	text: "Assignments",
+	link: "/assignments"
+      }
     ],
 
-    socialLinks: [{ icon: "github", link: "https://github.com/61040-fa24" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/MPadilla198" }],
   },
 });
