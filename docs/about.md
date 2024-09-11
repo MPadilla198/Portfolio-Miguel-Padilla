@@ -4,7 +4,7 @@ layout: doc
 ---
 # A little about me!
 
-![A portrait of Miguel Padilla.](/../assets/images/1725550821238-9892750f-913e-4430-83e5-d0cf44de60d5_1.PNG)
+![A portrait of Miguel Padilla.](/../assets/images/1725550821238-9892750f-913e-4430-83e5-d0cf44de60d5_1.png)
 
 
 My name is Miguel Padilla. I'm a course 6-3. 
