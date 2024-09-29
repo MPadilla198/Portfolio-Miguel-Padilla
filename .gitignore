@@ -1,3 +1,6 @@
 node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
+docs/assignments/assignment1.md
+docs/assignments/assignment2.md
+# docs/assignments/assignment3.md
