@@ -16,12 +16,18 @@ hero:
 
 features:
   - title: Blogs
-    details: Some cool blogs you'll write this semester!
+    details: Some cool blogs I've written this semester!
     link: /blogs
   - title: Assignments
-    details: All of your assignments will be posted on your portfolio.
+    details: All assignments are posted on your portfolio.
     link: /assignments
   - title: About Me
-    details: You'll implement a small bio about yourself on here!
+    details: A small bio about myself on here!
     link: about.md
+  - title: Backend Code Repository
+    details: A link to the backend for my new social media app.
+    link: "https://github.com/MPadilla198/backend-starter"
+  - title: Link to Deployment
+    details: A link to my social media app, hosted on Vercel!
+    link: "https://backend-starter-five.vercel.app/"
 ---
