@@ -16,14 +16,14 @@ Give Blocks a try! Easy to use interfaces for all programming skill-levels and t
 
 **app** Blocks
 
-**include** Authenticating \
-**include** Friending[ `User` ] \
-**include** Sessioning[ `User` ] \
-**include** Logging[ `User` ] \
-**include** Sourcing[ `User` ] \
-**include** Labelling[ `User`, `Content` ] \
-**include** Templating[ `User`, `Content` ] \
-**include** Posting[ `User`, `Render` ] \
+**include** Authenticating  
+**include** Friending[ `User` ]  
+**include** Sessioning[ `User` ]  
+**include** Logging[ `User` ]  
+**include** Sourcing[ `User` ]  
+**include** Labelling[ `User`, `Content` ]  
+**include** Templating[ `User`, `Content` ]  
+**include** Posting[ `User`, `Render` ]  
 **include** Sorting[ `User`, `Label`, `Feed` ] 
 
 **sync** getSessionUser(session: `Session`, **out** body: `User`)
@@ -70,17 +70,19 @@ Give Blocks a try! Easy to use interfaces for all programming skill-levels and t
     Sessioning.end(session)
 ```
 
-**sync** createPost(session: `Session`, content: `string`, **out** body: `Post`)
+**sync** createPost(session: `Session`, feedId: `Feed`, contentId: `Render`, **out** body: `ObjectId`)
 ```
+    Sessioning.getUser(session, user)
+    Posting.post(feedId, user, contentId, body)
 ```
-**sync** getPosts(author: `string`, **out** body: **list** `Post`)
+**sync** getPosts(postId: **opt** `Post`, author: `User`, **out** body: **set** `Post`)
 ```
+    Posting.get(postId, author, body)
 ```
-**sync** updatePost(session: `Session`, id: `ObjectId`, content: `string`, **out** body: `Post`)
+**sync** deletePost(session: `Session`, postId: `Post`, **out** body: `DeleteResult`)
 ```
-```
-**sync** deletePost(session: `Session`, id: `ObjectId`, **out** body: `DeleteResult`)
-```
+    Sessioning.getUser(session, user)
+    Posting.unpost(postId, user, body)
 ```
 
 **sync** getFriends(session: `Session`, **out** body: `string[]`)
@@ -130,95 +132,116 @@ Give Blocks a try! Easy to use interfaces for all programming skill-levels and t
     Sessioning.getUser(session, user)
     Sourcing.register(target, uri, user, body)
 ```
-**sync** getSources(session: `Session`,)
+**sync** getSource(session: `Session`, sourceId: `Source`, **out** body: `Source`)
 ```
+    Sessioning.getUser(session, user)
+    Sourcing.lookupOne(sourceId, user, body)
 ```
-**sync** updateSource(session: `Session`,)
+**sync** getSources(session: `Session`, **out** body: **set** `Source`)
 ```
+    Sessioning.getUser(session, user)
+    Sourcing.lookupMany(user, body)
 ```
-**sync** deleteSource(session: `Session`, sourceId: `ObjectId`, **out** body: `DeleteResult`)
+**sync** deleteSource(session: `Session`, sourceId: `Source`, **out** body: `DeleteResult`)
 ```
     Sessioning.getUser(session, user)
     Sourcing.unregister(sourceId, user, body)
 ```
 
-**sync** createContent()
+**sync** getContent(session: `Session`, contentId: `Content`, **out** body: `Content`)
 ```
-```
-**sync** getContent()
-```
-```
-**sync** updateContent()
-```
-```
-**sync** deleteContent()
-```
+    Sessioning.getUser(session, user)
+    Sourcing.get(contentId, user, body)
 ```
 
-**sync** createLabel()
+**sync** createLabel(session: `Session`, label: `string`, **out** body: `ObjectId`)
 ```
+    Sessioning.getUser(session, user)
+    Labelling.register(label, user, body)
 ```
-**sync** setLabel()
+**sync** getLabel(session: `Session`, label: `string`, **out** body: `Label`)
 ```
+    Sessioning.getUser(session, user)
+    Labelling.lookup(label, user, body)
 ```
-**sync** updateLabel()
+**sync** addLabel(session: `Session`, contentId: `ObjectId`, labelId: `ObjectId`)
 ```
+    Sessioning.getUser(session, user)
+    Labelling.add(contentId, labelId, user)
 ```
-**sync** deleteLabel()
+**sync** removeLabel(session: `Session`, contentId: `ObjectId`, labelId: `ObjectId`, **out** body: `DeleteResult`)
 ```
+    Sessioning.getUser(session, user)
+    Labelling.remove(contentId, labelId, user, body)
 ```
-
-**sync** createTemplate()
+**sync** deleteLabel(session: `Session`, label: `string`, **out** body: `DeleteResult`)
 ```
-```
-**sync** getTemplate()
-```
-```
-**sync** updateTemplate()
-```
-```
-**sync** deleteTemplate()
-```
-```
-
-**sync** createRender()
-```
-```
-**sync** getRender()
-```
-```
-**sync** deleteRender()
-```
+    Sessioning.getUser(session, user)
+    Labelling.unregister(label, user, body)
 ```
 
-**sync** createFeed()
+**sync** createTemplate(session: `Session`, template: `string`, numInputs: `integer`, **out** body: `ObjectId`)
 ```
+    Sessioning.getUser(session, user)
+    Templating.add(user, template, numInputs, body)
 ```
-**sync** getFeed()
+**sync** getTemplate(session: `Session`, templateId: **opt** `ObjectId`, **out** body: `Template`)
 ```
+    Sessioning.getUser(session, user)
+    if (templateId)
+        Templating.lookupById(user, templateId, body)
+    else
+        Templating.lookupByUser(user, body)
 ```
-**sync** updateFeed()
+**sync** updateTemplate(session: `Session`, templateId: `ObjectId`, newContent: `string`, numInputs: `integer`)
 ```
+    Sessioning.getUser(session, user)
+    Templating.update(user, templateId, newContent, numInputs)
 ```
-**sync** deleteFeed()
+**sync** deleteTemplate(session: `Session`, templateId: `ObjectId`, **out** body: `DeleteResult`)
 ```
-```
-
-**sync** createSort()
-```
-```
-**sync** getSort()
-```
-```
-**sync** updateSort()
-```
-```
-**sync** deleteSort()
-```
+    Sessioning.getUser(session, user)
+    Templating.remove(user, templateId, body)
 ```
 
-**system sync** update(id: String)
+**sync** createRender(session: `Session`, templateId: `ObjectId`, contentIds: **set** `ObjectId`, **out** body: `ObjectId`)
 ```
+    Sessioning.getUser(session, user)
+    Templating.render(user, templateId, contentIds, body)
+```
+**sync** getRenders(session: `Session`, renderId: **opt** `ObjectId`, **out** body: **set** `Render`)
+```
+    Sessioning.getUser(session, user)
+    if (renderId)
+        [Templating.getById(user, renderId, body)]
+    else
+        Templating.getByUser(user, body)
+```
+**sync** deleteRender(session: `Session`, renderId: `ObjectId`, **out** body: `DeleteResult`)
+```
+    Sessioning.getUser(session, user)
+    Templating.delete(user, renderId, body)
+```
+
+**sync** createFeed(session: `Session`, name: `string`, **out** body: `ObjectId`)
+```
+    Sessioning.getUser(session, user)
+    Posting.register(name, user, body)
+```
+**sync** getFeed(session: `Session`, feedId: **opt** `ObjectId`, **out** body: **set** `Feed`)
+```
+    Sessioning.getUser(session, user)
+    Posting.lookup(feedId, user, body)
+```
+**sync** updateFeedName(session: `Session`, feedId: `ObjectId`, newName: `string`)
+```
+    Sessioning.getUser(session, user)
+    Posting.updateName(feedId, user, newName)
+```
+**sync** deleteFeed(session: `Session`, feedId: `ObjectId`, **out** body: `DeleteResult`)
+```
+    Sessioning.getUser(session, user)
+    Posting.deregister(feedId, user, body)
 ```
 
 ## Standard Parts
@@ -232,7 +255,7 @@ authenticate users so that app users correspond to people
 after a user registers with a username and password pair, they can authenticate as that user by providing the pair: register \(n, p, u\); authenticate \(n, p, u'\) \{u' = u\}
 
 #### State
-registered: **set** `User`\
+registered: **set** `User`  
 username,password: registered -> **one** `string`
 
 #### Actions
@@ -308,7 +331,7 @@ delete(_id: `ObjectId`, **out** body: `DeleteResult`)
 after a session starts \(and before it ends\), the getUser action returns the user identifed at the start: start \(u, s\); getUser \(s, u'\) \{u' = u\}
 
 #### State
-active: **set** `Session`\
+active: **set** `Session`  
 user: active **one** `User`
 
 #### Actions
@@ -349,12 +372,12 @@ to keep a log of user's requests.
 logs a new line in output
 
 #### State
-output: **one** `string`\
-logs: **set** `Log`\
-date: logs -> **one** `Date`\
-user: logs -> **one** `User`\
-method: logs -> **one** `string`\
-resource: logs -> **one** `string`\
+output: **one** `string`  
+logs: **set** `Log`  
+date: logs -> **one** `Date`  
+user: logs -> **one** `User`  
+method: logs -> **one** `string`  
+resource: logs -> **one** `string`  
 query: logs -> **one** `string`
 
 #### Actions
@@ -420,11 +443,11 @@ to allow users to become friends
 #### Operational Principle
 
 #### State
-friends: **set** `Friendship`\
+friends: **set** `Friendship`  
 user1,user2: friends -> **one** `User`
 
-requests: **set** `FriendRequest`\
-to,from: requests -> **one** `User`\
+requests: **set** `FriendRequest`  
+to,from: requests -> **one** `User`  
 status: requests -> **one** `string`
 
 #### Actions
@@ -485,15 +508,15 @@ after registering the target t, extracting the resource data d and getting id i,
 #### State
 **const** SourceTarget: **set** `string`
 
-sources: **set** `Source`\
-user: sources -> **one** `User`\
-pathUri: sources -> **one** `string`\
-target: sources -> **one** `SourceTarget`\
+sources: **set** `Source`  
+user: sources -> **one** `User`  
+pathUri: sources -> **one** `string`  
+target: sources -> **one** `SourceTarget`  
 contentIDs: sources -> **set** `Content`
 
-content: **set** `Content`\
-user: content -> **one** `User`\
-source: content -> **one** `Source`\
+content: **set** `Content`  
+user: content -> **one** `User`  
+source: content -> **one** `Source`  
 body: content -> **one** `string`
 
 #### Actions
@@ -523,7 +546,7 @@ lookupOne(sourceId: `ObjectId`, user: `User`, **out** body: `Source`)
     source.user is user
     body := source
 ```
-lookupMany(user: `User`, **out** body: **list** `Source`)
+lookupMany(user: `User`, **out** body: **set** `Source`)
 ```
     source := { user: user }
     [source] from sources
@@ -558,9 +581,9 @@ to categorize resource data using labels
 after registering the label l and adding resourceID r to l, looking up l will yield a set including r and getting r will yield the set of l that include r
 
 #### State
-labels: **set** `Label`\
-user: labels -> **one** `User`\
-label: labels -> **one** `string`\
+labels: **set** `Label`  
+user: labels -> **one** `User`  
+label: labels -> **one** `string`  
 resources: labels -> **set** `ObjectId`
 
 #### Actions
@@ -572,7 +595,7 @@ register(label: `string`, user: `User`, **out** body: `ObjectId`)
     labels += l
     body = l._id
 ```
-unregister(label: `string`, user: `User`)
+unregister(label: `string`, user: `User`, **out** body: `DeleteResult`)
 ```
     l := { label: label, user: user }
     l in labels
@@ -591,14 +614,14 @@ lookupId(_id: `ObjectId`, user: `User`, **out** body: `Label`)
     body in labels
     body from Labels
 ```
-add(resource: `ObjectId`, label: `string`, user: `User`)
+add(contentId: `Content`, label: `ObjectId`, user: `User`)
 ```
     l := { label: label, user: user }
     l in labels
     l from labels
     l.resources += resource
 ```
-remove(resource: `ObjectId`, label: `string`, user: `User`, **out** body: `DeleteResult`)
+remove(contentId: `Content`, label: `ObjectId`, user: `User`, **out** body: `DeleteResult`)
 ```
     l := { label: label, user: user }
     l in labels
@@ -606,7 +629,7 @@ remove(resource: `ObjectId`, label: `string`, user: `User`, **out** body: `Delet
     resource in l.resources
     l.resources -= resource
 ```
-get(resource: `ObjectId`, **out** body: **set** `Label`)
+get(contentId: `Content`, **out** body: **set** `Label`)
 ```
     body := { resources: { resource } }
     body from labels
@@ -620,15 +643,15 @@ to render content that is of a type in Resources
 after adding the template t and getting templateID id, rendering template t with a list of inputs of type Resources will yield a render to display as a post
 
 #### State
-templates: **set** `Template`\
-user: templates **one** `User`\
-body: templates **one** `string`\
-numInputs: templates **one** { n: `integer` | n >= 0 }\
+templates: **set** `Template`  
+user: templates **one** `User`  
+body: templates **one** `string`  
+numInputs: templates **one** { n: `integer` | n >= 0 }  
 templateRenders: templates **set** `Render`
 
-renders: **set** `Render`\
-user: renders **one** `User`\
-contentInputs: renders **set** `Content`\
+renders: **set** `Render`  
+user: renders **one** `User`  
+contentInputs: renders **set** `Content`  
 body: renders **one** `string`
 
 #### Actions
@@ -638,18 +661,19 @@ add(user: `User`,  body: `string`, numInputs: `integer`, **out** body: `ObjectId
     template not in templates
     templates += template
 ```
-lookupById(template: `ObjectId`, **out** body: `Template`)
+lookupById(user: `User`, template: `ObjectId`, **out** body: `Template`)
 ```
-    body := { _id: template }
+    body := { user: user, _id: template }
     body in templates
     body from templates
 ```
 lookupByUser(user: `User`, **out** body: **set** `Template`)
 ```
     body := { user: user }
+    body in templates
     [body] from templates
 ```
-update(user: `User`, template: `ObjectId`, content: `string`, numInputs: `integer`)
+update(user: `User`, templateId: `Template`, content: `string`, numInputs: `integer`)
 ```
     temp := { user: user, _id: template }
     temp in templates
@@ -657,14 +681,14 @@ update(user: `User`, template: `ObjectId`, content: `string`, numInputs: `intege
     temp.content := content
     temp.numInputs := numInputs
 ```
-remove(user: `User`, template: `ObjectId`, **out** body: `DeleteResult`)
+remove(user: `User`, templateId: `Template`, **out** body: `DeleteResult`)
 ```
     temp := { user: user, _id: template }
     temp in templates
     temp from templates
     templates -= temp
 ```
-render(user: `User`, template: `Template`, content: **set** content, **out** body: `ObjectId`)
+render(user: `User`, templateId: `Template`, contentIds: **set** `content`, **out** body: `ObjectId`)
 ```
     newRender :=  { user: user,  contentInputs: content, body: Render(template, content) }
     newRender not in renders
@@ -673,7 +697,7 @@ render(user: `User`, template: `Template`, content: **set** content, **out** bod
     template.templateRenders += newRender
     body := newRender._id
 ```
-getById(user: `User`, render: `ObjectId`, **out** body: `Render`)
+getById(user: `User`, renderId: `ObjectId`, **out** body: `Render`)
 ```
     body := { user: user, _id: render }
     body in renders
@@ -701,13 +725,13 @@ to group content into a feed set
 after registering feed f with name n, getting the feedID id, posting a renderID r to f, getting f will yield a set of renderIDs that contains r 
 
 #### State
-posts: **set** `Post`\
-author: posts **one** `User`\
+posts: **set** `Post`  
+author: posts **one** `User`  
 content: posts **one** `Render`
 
-feeds: **set** `Feed`\
-owner: feeds **one** `User`\
-name: feeds **one** `string`\
+feeds: **set** `Feed`  
+owner: feeds **one** `User`  
+name: feeds **one** `string`  
 posts: feeds **set** `Post`
 
 #### Actions
@@ -778,10 +802,10 @@ to order a feed set according to label weights
 after adding label l and weight w, getting l will yield w and sorting a feedSet will yield a sorted set according to the labels and their weights
 
 #### State
-sorts: **set** `Sort`\
-title: sorts **one** `string`\
-owner: sorts **one** `User`\
-labels: sorts **set** `Label`\
+sorts: **set** `Sort`  
+title: sorts **one** `string`  
+owner: sorts **one** `User`  
+labels: sorts **set** `Label`  
 weights: labels **one** `number`
 
 #### Actions
@@ -866,9 +890,13 @@ My design is a general take on what it means to post on social media. My hope is
 
 # Reflections on Design
 ## A Concept's State and Actions are Database Synchronizations
-Viewing the database as a concept, the functions within each action are synchronizations of a database Concept. They're not actions, not only because we do not specify what particular db carries out these functions, but also concepts do not have intrinsic dependencies with other concepts. On the first point, If we were to structure the code in our project to support Google Sheets for a backend (as many small businesses and organizations often do).
+Were we to view the database as a concept, the functions within each action are synchronizations of a database Concept. aThese functions are not actions, not only because we do not specify what particular db carries out these functions, but also concepts do not have intrinsic dependencies with other concepts, i.e. they would not be accessible . On the first point, were we to need to support Google Sheets for a backend (as many small businesses and organizations often do), that should be as easy as defining a "sheets db interface" that implements the necessary database synchronizations and passes that to the server for use. 
 
-Why do this if it seems to clash with the central idea? I think it's helpful to think of concepts as living within domains with synchronizations as the interfaces between domains. This would have the added benefit of being able to use the same or similar concepts within different domains, e.g. using a Logging concept within the app that is seperate from the Logging concept of the database. This separation of two set of logs makes sense as the app and databases will have different needs from a logger, e.g., the app's Logging will likely output to the console, whereas a database's logging will likely be streamed into a file for future use. 
+I have a section [below](#defining-database-synchronizations) that builds on the spec language presented in class and specifies not only the relational state of my app but also the CRUD operations and filters given by MongoDB. These feel like appropriate starting point in terms of basic db functionality. I'm choosing to make my spec more *in-depth* because it's the formalization of a spec that allows for automatic code generation. I explain this more in detail [below](#why-formalize), but, essentially, this allows for us to skip a lot of the boiler-plate/repetition that is needed to design (and re-design) our app, while keeping both of our front and back ends synchronized.
+
+Along with each specification function, I wrote an associated shorthand (again, largely used from the lectures). Each of these shorthands has an associated function that would need to be implemented in the backend. 
+
+**Note**: the wonderful and helpful TAs that structured the codebase included a file `/server/framework/doc.ts` that demostrates what it looks like for these function to be implemented as part of the backend. This TS file would serve as the interface between the database synchronizations specified below for the actual implementation. 
 
 ## Defining Database Synchronizations
 I wanted to write this part down to have a standard to refer to as I add to the project. It allows me to build based on the CRUD operations defined by MongoDb.
@@ -878,14 +906,14 @@ I wanted to write this part down to have a standard to refer to as I add to the 
 
 Setting types
 
-**const** TypeName -> **set** Type, to represent constant set of values\
+**const** TypeName -> **set** Type, to represent constant set of values  
 TypeName -> **set** Type
 
 Binary relations
 
-property: TypeName -> **Multiplicity** Type\
-property: TypeName -> **Multiplicity** Type\
-property1, property2: TypeName -> **Multiplicity** Type\
+property: TypeName -> **Multiplicity** Type  
+property: TypeName -> **Multiplicity** Type  
+property1, property2: TypeName -> **Multiplicity** Type  
 property: TypeName -> **Multiplicity** {subName: Type | subName constraint, ...}, e.g. subName > 0 if Type is Integer
 
 | Value | Multiplicity |
@@ -900,17 +928,17 @@ property: TypeName -> **Multiplicity** {subName: Type | subName constraint, ...}
 #### Create
 | Function Operation | Shorthand |
 | ------------------ | --------- |
-| `insertOne({...})` | `stateVariable += variableName` |
-|           | `stateVariable += {property1: Object, property2: Object, ...}` |
-| `insertMany([{...}, {...}, ...])` | `stateVariable += [variableName1, variableName2, ...]` |
-|            | `stateVariable += [{property1: Object, property2: Object, ...}]` |
+| `createOne({...})` | `stateVariable += variableName` |
+|                    | `stateVariable += {property1: Object, property2: Object, ...}` |
+| `createMany([{...}, {...}, ...])` | `stateVariable += [variableName1, variableName2, ...]` |
+|                    | `stateVariable += [{property1: Object, property2: Object, ...}]` |
 #### Read
 | Function Operation | Shorthand |
 | ------------------ | --------- |
-| `findOne({...})` | `Filter from stateVariable` |
-|         | `{property1: Object, property2: Object, ...} from stateVariable` |
-| `find({...})`    | `[Filter] from stateVariable` |
-|         | `[{property1: Object, property2: Object, ...}] from stateVariable` |
+| `readOne({...})`   | `Filter from stateVariable` |
+|                    | `{property1: Object, property2: Object, ...} from stateVariable` |
+| `read({...})`      | `[Filter] from stateVariable` |
+|                    | `[{property1: Object, property2: Object, ...}] from stateVariable` |
 
 #### Update
 | Function Operation | Shorthand |
@@ -980,6 +1008,15 @@ Beyond a direct mapping of fields to values of the object, there are additional 
 
 **NOTE**: Evaluation operators return data based on evaluations of either individual fields or the entire collection's documents. [Source](https://www.mongodb.com/docs/manual/reference/operator/query-evaluation/)
 
+Example filter use:
+```
+    l := { label: ( `$regex`: `.` ), user: user }
+    l in labels
+    l from labels
+    ...
+```
+This would get all labels of a user. Note: this is a terrible way of expressing that you want all labels of a user; this example is purely for demonstrative purposes.
+
 **More Query and Projection Operators Found [Here](https://www.mongodb.com/docs/manual/reference/operator/query/).**
 
 ### Representation Invariants
@@ -989,9 +1026,9 @@ Listed below are operations that will assert that certain representation require
 | Function Operation | Shorthand |
 | ------------------ | --------- |
 | `doesExist({...})` | `variableName in stateVariable` |
-|                 | `Filter in stateVariable` |
+|                    | `Filter in stateVariable` |
 | `doesNotExist({...})` | `variableName not in stateVariable` |
-|                 | `Filter not in stateVariable` |
+|                       | `Filter not in stateVariable` |
 | `equal({...}, {...})` | `variableName is Object` |
 |                       | `Object is Object` |
 | `notEqual({...}, {...})` | `variableName is not Object` |
@@ -1000,6 +1037,30 @@ Listed below are operations that will assert that certain representation require
 | `if property !== null`\*  | `if property` |
 | `if property === null`\*\* | `else` |
 
-**Notes**\
-\* This function may be used on types that have an optional (`opt`) multiplicity to check if variable is provided.\
+**Notes**  
+\* This function may be used on types that have an optional (`opt`) multiplicity to check if variable is provided.  
 \*\* Works in conjunction with `if ...` to specify the path taken if the optional variable is not provided as part of a response. This is optional and does not need to be specified for every `if`.
+
+## Why formalize?
+I've been reflecting on the talks given by Daniel Jackson (at least those on Youtube) about the Concepts idea. My personal favorite (because I believe it's the most in-depth) was this [one](https://www.youtube.com/watch?v=pCr3GjdoTbg). Early on he explains how he believes the true innovation of the web is the URL because it eliminated some of the steps that made using the web, then, frustrating. 
+
+> **a product is defined by a scenario**
+> 
+> a compelling story of *how* to use it
+> a social protocal and a service API at once hints at *why* the user's purpose is fulfilled 
+> an *archetypal* usage, not the only one
+
+Bringing that back to the project, there are a lot of things about going through this process of development that are just unnecessarily painful. I feel that I'm not alone in feeling this way given that Jackkson's work is looking into how we can use AI models, like ChatGPT, to do the coding after the design decisions have been made and documented in the Concept spec.
+
+While this is a potential solution to the synchronization and verbosity issues presented in the section [above](#a-concepts-state-and-actions-are-database-synchronizations), I personally think that there's a missed opportunity in using concepts to structure APIs (not only for web development but also for any program with a user-interface). 
+
+> **innovations (almost) never enable new things**
+>
+> they just make them *easier* to do
+> an old scenario with *pain* points is replaced by new one
+
+The main idea comes from [the Protocal Buffers language](https://protobuf.dev/programming-guides/proto3/). It's not a programming language like Python or TypeScript, but rather a schema for structuring data and messages for remote procedure calls using binary encoding. This would be an extremely difficult thing to generate for every single project, so the language offers code generation where programmers may create a schema then [generate](https://protobuf.dev/programming-guides/proto3/#generating) the data classes in a variety of languages (but noteably not TS/JSNode).
+
+By formalizing the semantics of the Concept specification, we can generate the structure of the application in such a way that the front-end dev gets the basic (in this case Vue) components of each data block and the back-end dev gets the database and transport methods. This allows for the front-end devs to focus on the user-facing implications of the design and the back-end devs to worry about the techinal design of the backend system, all while creating a schema that is more human readable and thereby accessible. Much like how the URL lowered the barrier-for-entry of the internet, having a formal spec that may be reasoned about by anyone (by any designer, user, or impacted persons).
+
+This approach could be combined with the ChatGPT solution by inputting the output methods, normally to be coded by devs, into a model to populate. This is not necessarily the use-case I'm backing, but I want to note that it's still a viable solution. I personally think that this is an interesting future area of development.
